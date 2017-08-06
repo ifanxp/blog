@@ -5,6 +5,7 @@ package hiveudfdemo;
  * http://blog.csdn.net/moxuqiang_dm/article/details/47401063
  * http://www.cnblogs.com/ggjucheng/archive/2013/02/01/2888051.html
  * http://blog.csdn.net/kent7306/article/details/50110067 
+ * apache-hive-2.3.0-src/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDAFSum.java
  */
 
 import org.apache.hadoop.hive.ql.metadata.HiveException;
