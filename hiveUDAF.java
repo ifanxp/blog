@@ -1,6 +1,7 @@
 package hiveudfdemo;
 
 /*
+ * 参考资料
  * http://blog.csdn.net/moxuqiang_dm/article/details/47401063
  * http://www.cnblogs.com/ggjucheng/archive/2013/02/01/2888051.html
  * http://blog.csdn.net/kent7306/article/details/50110067 
@@ -17,16 +18,21 @@ import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectIn
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.io.IntWritable;
 
+/*
+实现按位OR的聚合函数
+*/
 public class AggOr implements GenericUDAFResolver2 {
     @Override
+    //这个函数是为了向下兼容
     public GenericUDAFEvaluator getEvaluator(TypeInfo[] parameters) throws SemanticException {
+        assert (parameters.length == 1);
         return new udafBitOrEvaluators();
     }
 
     @Override
     public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo paramInfo) throws SemanticException {
         ObjectInspector[] parameters = paramInfo.getParameterObjectInspectors();
-        assert (parameters.length == 1);
+        assert (parameters.length == 1);//只允许输入一个字段
         return new udafBitOrEvaluators();
     }
 
