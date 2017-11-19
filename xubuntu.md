@@ -13,4 +13,7 @@
 * 安装autoconf automake libtool cmake `sudo apt install automake libtool cmake`
 * 安装ncurses-devel `sudo apt install libncurses5-dev`
 * 安装openssl-devel `sudo apt install libssl-dev`
-
+* 安装maven
+  - http://maven.apache.org/download.cgi
+* 安装protobuf 2.5.0
+  - https://github.com/google/protobuf/releases?after=v2.6.0
