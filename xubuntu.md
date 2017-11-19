@@ -13,7 +13,8 @@
 `timedatectl set-local-rtc true`
 
 ### grub菜单中默认选中win7
-修改/etc/default/grub中 `GRUB_DEFAULT=4` 其中数字4是win7在grub菜单中的序号(从0开始)
+* 修改/etc/default/grub中 `GRUB_DEFAULT=4` 其中数字4是win7在grub菜单中的序号(从0开始)
+* `sudo update-grub`更新/boot/grub/grub.cfg
 
 ### spark安装准备
 
