@@ -4,9 +4,8 @@
 在最初的安装菜单界面中，按F6并选中nomodeset，可以解决不能识别显卡导致安装界面进不去的问题。
 
 ### nvidia gt630 显卡驱动安装
-参考 http://blog.csdn.net/10km/article/details/61191230
-由于电脑太旧，所以安装的304版本的驱动
-`sudo apt-get install nvidia-304`
+* 参考 http://blog.csdn.net/10km/article/details/61191230
+* 由于电脑太旧，所以安装的304版本的驱动 `sudo apt-get install nvidia-304`
 
 ### 系统时间与win7同步
 参考 http://blog.csdn.net/B__T__T/article/details/71856797
