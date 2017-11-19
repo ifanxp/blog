@@ -8,6 +8,13 @@
 由于电脑太旧，所以安装的304版本的驱动
 `sudo apt-get install nvidia-304`
 
+### 系统时间与win7同步
+参考 http://blog.csdn.net/B__T__T/article/details/71856797
+`timedatectl set-local-rtc true`
+
+### grub菜单中默认选中win7
+修改/etc/default/grub中 `GRUB_DEFAULT=4` 其中数字4是win7在grub菜单中的序号(从0开始)
+
 ### spark安装准备
 
 * 安装autoconf automake libtool cmake `sudo apt install automake libtool cmake`
