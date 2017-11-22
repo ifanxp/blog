@@ -14,13 +14,3 @@
 ### grub菜单中默认选中win7
 * 修改/etc/default/grub中 `GRUB_DEFAULT=4` 其中数字4是win7在grub菜单中的序号(从0开始)
 * `sudo update-grub`更新/boot/grub/grub.cfg
-
-### spark安装准备
-
-* 安装autoconf automake libtool cmake `sudo apt install automake libtool cmake`
-* 安装ncurses-devel `sudo apt install libncurses5-dev`
-* 安装openssl-devel `sudo apt install libssl-dev`
-* 安装maven
-  - [http://maven.apache.org/download.cgi](http://maven.apache.org/download.cgi)
-* 安装protobuf 2.5.0
-  - [https://github.com/google/protobuf/releases?after=v2.6.0](https://github.com/google/protobuf/releases?after=v2.6.0)
