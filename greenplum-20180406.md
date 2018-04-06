@@ -29,7 +29,13 @@ SELECT * FROM generate_series(1, 5, 2);
 ```
 
 ```sql
-SELECT daytime::date as daytime FROM generate_series('2018-01-01'::date, '2018-01-07', '1 day') as d(daytime);
+-- 指定字段别名和数据类型
+SELECT daytime::date as daytime
+FROM generate_series(
+        '2018-01-01'::date,
+        '2018-01-07',
+        '1 day'
+     ) as d(daytime);
 -----------------
 2018-01-01
 2018-01-02
