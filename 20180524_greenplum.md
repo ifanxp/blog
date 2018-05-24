@@ -33,7 +33,7 @@ if [ $# = 0 ]; then
    exit 1
 fi
 
-for s in $(cat tables.txt)
+for s in $(cat "$1")
 do
     if [[ $s = *"product."* ]]; then
        psql -h <host> -p <port> -d <database) -U <user_name> -c "copy $s to stdout  csv" | psql -h <host> -p <port> -d <database> -c "copy $s from stdin csv" 
