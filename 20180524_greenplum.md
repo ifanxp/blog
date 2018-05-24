@@ -28,12 +28,17 @@ where tb.relkind='r' and ns.nspname=<schema>
 ```bash
 #!/bin/bash
 #save to import_data.sh
-FOR s IN $(cat tables.txt)
-DO
-    IF [[ $s = *"product."* ]]; THEN
+if [ $# = 0 ]; then
+   echo "Usage: sh import_data.sh <filename>"
+   exit 1
+fi
+
+for s in $(cat tables.txt)
+do
+    if [[ $s = *"product."* ]]; then
        psql -h <host> -p <port> -d <database) -U <user_name> -c "copy $s to stdout  csv" | psql -h <host> -p <port> -d <database> -c "copy $s from stdin csv" 
-    FI
-DONE
+    fi
+done
 ```
 
 
