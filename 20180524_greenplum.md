@@ -7,6 +7,7 @@ pg_dump -h <host> -p <port> -U <user_name> -d <database> -n <schema> -s -f gpdb_
 
 # 在目标服务器执行脚本
 psql -h <host> -p <port> -d <database> -U <user_name> -f gpdb_definition.sql
+psql <database> -f gpdb_definition.sql #在本机上可以这样
 ```
 
 ```sql
