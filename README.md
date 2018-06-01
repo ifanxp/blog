@@ -5,3 +5,4 @@ Hello，欢迎光临我的博客！
 * [Xubuntu 17.10 安装记录](xubuntu.md)
 * [hadoop安装记录(进行中)](hadoop.md)
 * [记一次Greenplum数据迁移](20180524_greenplum.md)
+* [Greenplum迁移自动化脚本](gp_movedata.md)
