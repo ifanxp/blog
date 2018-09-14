@@ -38,6 +38,9 @@ for s in $(cat "$1")
 do
     if [[ $s = *"product."* ]]; then
        psql -h <host> -p <port> -d <database) -U <user_name> -c "copy $s to stdout  csv" | psql -h <host> -p <port> -d <database> -c "copy $s from stdin csv" 
+       
+       # 这样可以压缩并保存至磁盘（gzip格式）
+       # psql -h <host> -p <port> -d <database> -U <user_name> -c "copy <schema>.<view_name> to stdout csv"|gzip > <schema>.<view_name>.gz
     fi
 done
 ```
