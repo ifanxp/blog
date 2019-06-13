@@ -1,97 +1,55 @@
-package hiveudfdemo;
-
-/*
- * 参考资料
- * http://blog.csdn.net/moxuqiang_dm/article/details/47401063
- * http://www.cnblogs.com/ggjucheng/archive/2013/02/01/2888051.html
- * http://blog.csdn.net/kent7306/article/details/50110067 
- * apache-hive-2.3.0-src/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDAFSum.java
- */
-
+package test;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.hive.ql.exec.UDAF;
+import org.apache.hadoop.hive.ql.exec.UDAFEvaluator;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
-import org.apache.hadoop.hive.ql.parse.SemanticException;
-import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator;
-import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
-import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFResolver2;
-import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.IntObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
-import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
-import org.apache.hadoop.io.IntWritable;
-
-/*
-实现按位OR的聚合函数
-*/
-public class AggOr implements GenericUDAFResolver2 {
-    @Override
-    //这个函数是为了向下兼容
-    public GenericUDAFEvaluator getEvaluator(TypeInfo[] parameters) throws SemanticException {
-        assert (parameters.length == 1);
-        return new udafBitOrEvaluators();
-    }
-
-    @Override
-    public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo paramInfo) throws SemanticException {
-        ObjectInspector[] parameters = paramInfo.getParameterObjectInspectors();
-        assert (parameters.length == 1);//只允许输入一个字段
-        return new udafBitOrEvaluators();
-    }
-
-    public static class udafBitOrEvaluators extends GenericUDAFEvaluator {
-        private IntObjectInspector partialResult;
-        private IntWritable result;
-
-        @Override
-        public ObjectInspector init(Mode m, ObjectInspector[] parameters) throws HiveException {
-            assert (parameters.length == 1);
-            super.init(m, parameters);
-            partialResult = (IntObjectInspector) parameters[0];
-            result = new IntWritable(0);
-            return PrimitiveObjectInspectorFactory.writableIntObjectInspector;
+@SuppressWarnings("deprecation")
+public class BitOr extends UDAF {
+    // Define Logging
+    static final Log LOG = LogFactory.getLog(BitOr.class.getName());
+    public static class BitOrUDAFEvaluator implements UDAFEvaluator {
+        public static class Column {
+            int sum = 0;
+        }
+        private Column col = null;
+        public BitOrUDAFEvaluator() {
+            super();
+            init();
         }
 
-        @AggregationType(estimable = true)
-        static class BitOrAgg extends AbstractAggregationBuffer {
-            int value;
+        public void init() {
+            LOG.debug("Initialize evaluator");
+            col = new Column();
         }
 
-        @Override
-        public AggregationBuffer getNewAggregationBuffer() throws HiveException {
-            BitOrAgg buffer = new BitOrAgg();
-            reset(buffer);
-            return buffer;
+        public boolean iterate(int value) throws HiveException {
+            LOG.debug("Iterating over each value for aggregation");
+            if (col == null)
+                throw new HiveException("Item is not initialized");
+            col.sum |= value;
+            return true;
         }
-
-        @Override
-        public void reset(AggregationBuffer agg) throws HiveException {
-            ((BitOrAgg) agg).value = 0;
+        // C - Called when Hive wants partially aggregated results.
+        public Column terminatePartial() {
+            LOG.debug("Return partially aggregated results");
+            return col;
         }
+        // D - Called when Hive decides to combine one partial aggregation with
+        // another
 
-        @Override
-        public void iterate(AggregationBuffer agg, Object[] parameters) throws HiveException {
-            assert (parameters.length == 1);
-            merge(agg, parameters[0]);
-        }
-
-        @Override
-        public void merge(AggregationBuffer agg, Object partial) throws HiveException {
-            if (partial != null && partialResult != null) {
-                int p = partialResult.get(partial);
-                ((BitOrAgg) agg).value |= p;
+        public boolean merge(Column other) {
+            LOG.debug("merging by combining partial aggregation");
+            if (other == null) {
+                return true;
             }
+            col.sum |= other.sum;
+            return true;
         }
-
-        // 最终被调用返回结果；
-        @Override
-        public Object terminate(AggregationBuffer agg) throws HiveException {
-            result.set(((BitOrAgg) agg).value);
-            return result;
-        }
-
-        @Override
-        public Object terminatePartial(AggregationBuffer agg) throws HiveException {
-            return terminate(agg);
+        // E - Called when the final result of the aggregation needed.
+        public int terminate() {
+            LOG.debug("At the end of last record of the group - returning final result");
+            return col.sum;
         }
     }
-
 }
