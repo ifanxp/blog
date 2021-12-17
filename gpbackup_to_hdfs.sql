@@ -9,17 +9,12 @@ declare v_sql text;
 declare v_pg_define text;
 declare v_hive_define text;
 declare v_column_list text;
-declare v_server_name text = 'gp20';
+declare v_server_name text = 'gp91';
 declare v_gp_extname text = 'hivebak_'||replace(in_tablename, '.', '__')||'__ext';
 declare v_hive_table text = v_server_name||'__'||current_database()||'__'||replace(in_tablename, '.', '__');
-declare v_hdfs_location text = 'gphdfs://nameservice1/user/irsuser/gpbackup.db/'||v_hive_table||'/backup_ts='||in_backup_ts||'/backup_'||in_filter||'?compress=true';
+declare v_hdfs_location text = 'gphdfs://nameservice1/user/irsuser/gpbackup.db/'||v_hive_table||'/backup_ts='||in_backup_ts||COALESCE('/backup_'||in_filter, '')||'?compress=true';
 declare v_hive_partname text = 'backup_'||(string_to_array(in_filter, '='))[1];
 BEGIN
-
-/*
-调用方式：
-select public.hivebakup('om_douyin.bt_douyin_mac_video_behavior_2019', 'date_id=20190101', '20211024_1643', 0);
-*/
 
 
 SELECT string_agg(attname || ' ' || pg_type_name, ', '   order by attnum) as pg_define, 
@@ -48,7 +43,7 @@ drop table if exists gpbackup.'||v_hive_table||';
 create table gpbackup.'||v_hive_table||' (
     '||v_hive_define||'
 )
-PARTITIONED BY (backup_ts string, '||v_hive_partname||' int)
+PARTITIONED BY (backup_ts string'||COALESCE(', '||v_hive_partname||' int', '')||')
 STORED as TEXTFILE;';
 raise notice 'hql: %', replace(v_sql, chr(13), '');
 
@@ -67,7 +62,7 @@ end if;
 
 v_sql = '
 INSERT INTO product_ext.'||v_gp_extname||'
-SELECT * FROM '||in_tablename||' WHERE '||in_filter||';';
+SELECT * FROM '||in_tablename||' WHERE '||COALESCE(in_filter, '1=1')||';';
 if in_debug = 0 then
     execute v_sql;
 else
@@ -80,3 +75,4 @@ END
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
+ 
