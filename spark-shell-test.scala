@@ -1,4 +1,4 @@
-\import org.apache.spark.sql.Row
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.expressions.{MutableAggregationBuffer, UserDefinedAggregateFunction}
 import org.apache.spark.sql.types.{DataType, IntegerType, StructField, StructType}
  
@@ -22,7 +22,7 @@ class IntegerBitOr extends UserDefinedAggregateFunction{
 
 
 
-# 定义 bit_count 函数，该函数在spark 3.0.0 自带
+// 定义 bit_count 函数，该函数在spark 3.0.0 自带
 def bit_count(i: Integer) = {
     var n = i
     n = n - ( ( n >> 1 ) & 1431655765 )
@@ -33,15 +33,15 @@ def bit_count(i: Integer) = {
     n
 }
 
-# 注册自定义聚合函数
+// 注册自定义聚合函数
 spark.udf.register("bit_or", new IntegerBitOr)
 
-# 注册自定义函数
+// 注册自定义函数
 spark.udf.register("bit_count", bit_count _)
 
-# 使用自定义函数
-# spark.sql("select bit_or(num) from (select 1 as num union select 2 as num) as t").show
-# spark.sql("select col_name, bit_count(col_name) as col_name2 from tble ")
+// 使用自定义函数
+// spark.sql("select bit_or(num) from (select 1 as num union select 2 as num) as t").show
+// spark.sql("select col_name, bit_count(col_name) as col_name2 from tble ")
 
 
 spark.sql("""
