@@ -1,5 +1,13 @@
 ```c++
 // uda-bitor.h
+/***
+create aggregate function bit_or(int) returns int  
+location '/user/irsuser/jars/libudabitwise.so'  
+init_fn='BitOrInit'  
+update_fn='BitOrUpdate'  
+merge_fn='BitOrMerge'  
+finalize_fn='BitOrFinalize';
+***/
 #ifndef BITOR_UDA_H
 #define BITOR_UDA_H
 #include <impala_udf/udf.h>
