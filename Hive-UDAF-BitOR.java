@@ -17,7 +17,15 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.util.StringUtils;
 import java.util.ArrayList;
 
-// 参考 https://blog.csdn.net/a805814077/article/details/104645447
+/* 
+参考：
+https://blog.csdn.net/a805814077/article/details/104645447
+
+用法：
+add jar /home/irsuser/ifan/hive/Hive-UDAF-test.jar;
+create temporary function my_bit_or as 'cn.com.iresearch.ifan.bitwise.BitOR';
+select my_bit_or(num) as nums from (select 1 as num union all select 2 as num) as t;
+*/
 
 public class BitOR extends AbstractGenericUDAFResolver {
 
